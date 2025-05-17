@@ -1,0 +1,589 @@
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>🔐 Cyber Encryption Tool - Neon Matrix</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Share Tech Mono', monospace;
+      background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+      color: #00fff9;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    /* Flickering neon effect */
+    .neon-text {
+      text-shadow:
+        0 0 8px #00fff9,
+        0 0 20px #00fff9,
+        0 0 30px #00fff9,
+        0 0 50px #00fff9,
+        0 0 80px #00fff9;
+      animation: flicker 3s infinite alternate;
+    }
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        text-shadow:
+          0 0 8px #00fff9,
+          0 0 20px #00fff9,
+          0 0 30px #00fff9,
+          0 0 50px #00fff9,
+          0 0 80px #00fff9;
+        opacity: 1;
+      }
+      20%, 22%, 24%, 55% {
+        text-shadow: none;
+        opacity: 0.85;
+      }
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #00fff9;
+      border-radius: 10px;
+      box-shadow: 0 0 12px #00fff9;
+    }
+    /* Glowing button */
+    .btn-glow {
+      @apply relative inline-flex items-center justify-center px-6 py-3 font-bold tracking-wider uppercase rounded-lg text-cyan-300 transition-all duration-300;
+    }
+    .btn-glow::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 12px;
+      background: linear-gradient(45deg, #00fff9, #00b3ff, #00fff9, #00b3ff);
+      background-size: 400% 400%;
+      filter: blur(10px);
+      opacity: 0.5;
+      animation: glowing 20s linear infinite;
+      z-index: -1;
+      transition: opacity 0.3s ease-in-out;
+    }
+    .btn-glow:hover::before {
+      opacity: 1;
+    }
+    @keyframes glowing {
+      0% {background-position: 0% 50%;}
+      50% {background-position: 100% 50%;}
+      100% {background-position: 0% 50%;}
+    }
+    /* Input & textarea neon glow */
+    input[type="text"], input[type="number"], textarea {
+      background: #022f3d;
+      border: 2px solid #00fff9;
+      color: #00fff9;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1rem;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1rem;
+      box-shadow:
+        0 0 8px #00fff9,
+        0 0 18px #00fff9;
+      transition: border-color 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+      resize: vertical;
+    }
+    input[type="text"]:focus, input[type="number"]:focus, textarea:focus {
+      outline: none;
+      border-color: #00b3ff;
+      box-shadow:
+        0 0 15px #00b3ff,
+        0 0 30px #00b3ff;
+      background: #013a4a;
+    }
+    /* Scrollbar for textarea */
+    textarea::-webkit-scrollbar {
+      width: 6px;
+      background: transparent;
+    }
+    textarea::-webkit-scrollbar-thumb {
+      background: #00b3ff;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #00b3ff;
+    }
+    /* Nav button active state */
+    .nav-btn-active {
+      background: #00fff9;
+      color: #013a4a;
+      box-shadow:
+        0 0 15px #00fff9,
+        0 0 40px #00fff9;
+    }
+    /* Section container */
+    .cipher-section {
+      display: none;
+      animation: fadeIn 0.8s ease forwards;
+    }
+    .active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(10px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    /* Neon border for sections */
+    .section-container {
+      border: 2px solid #00fff9;
+      border-radius: 1rem;
+      padding: 1.75rem 2.5rem;
+      box-shadow:
+        0 0 15px #00fff9,
+        0 0 40px #00fff9 inset;
+      background: rgba(1, 47, 59, 0.95);
+      backdrop-filter: saturate(180%) blur(12px);
+      margin-top: 1.75rem;
+    }
+    /* Heading style */
+    h1, h2 {
+      font-family: 'Orbitron', sans-serif;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      user-select: none;
+    }
+    h1 {
+      font-size: 3rem;
+      margin-bottom: 0.75rem;
+      text-align: center;
+      color: #00fff9;
+      text-shadow:
+        0 0 15px #00fff9,
+        0 0 30px #00fff9,
+        0 0 45px #00fff9;
+    }
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1.25rem;
+      color: #00b3ff;
+      text-shadow:
+        0 0 8px #00b3ff,
+        0 0 18px #00b3ff;
+    }
+    /* Label style */
+    label {
+      display: block;
+      margin-bottom: 0.35rem;
+      font-weight: 700;
+      color: #00fff9;
+      text-shadow: 0 0 5px #00fff9;
+      user-select: none;
+    }
+    /* Buttons container */
+    .btn-group {
+      display: flex;
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+      flex-wrap: wrap;
+    }
+    /* Footer */
+    footer {
+      margin-top: 3.5rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #00b3b3;
+      user-select: none;
+    }
+    /* Layout for desktop: input left, result right */
+    .cipher-flex {
+      display: flex;
+      gap: 3rem;
+      align-items: flex-start;
+      flex-wrap: nowrap;
+    }
+    .input-area {
+      flex: 1 1 50%;
+      display: flex;
+      flex-direction: column;
+    }
+    .result-area {
+      flex: 1 1 50%;
+      display: flex;
+      flex-direction: column;
+    }
+    .result-textarea {
+      width: 100%;
+      height: 18rem;
+      resize: vertical;
+      border-radius: 0.75rem;
+      background: #022f3d;
+      border: 2px solid #00fff9;
+      box-shadow: inset 0 0 20px #00fff9;
+      color: #00fff9;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.125rem;
+      padding: 1rem 1.25rem;
+      cursor: not-allowed;
+    }
+    /* Input textareas styling */
+    textarea.input-textarea {
+      width: 100%;
+      min-height: 10rem;
+      border-radius: 0.75rem;
+      background: #022f3d;
+      border: 2px solid #00fff9;
+      box-shadow: 0 0 12px #00fff9;
+      color: #00fff9;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.125rem;
+      padding: 1rem 1.25rem;
+      resize: vertical;
+    }
+    input.input-field {
+      width: 10rem;
+      border-radius: 0.75rem;
+      background: #022f3d;
+      border: 2px solid #00fff9;
+      box-shadow: 0 0 12px #00fff9;
+      color: #00fff9;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1.125rem;
+      padding: 0.5rem 1rem;
+      margin-top: 0.25rem;
+    }
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+      .cipher-flex {
+        flex-direction: column;
+      }
+      .result-textarea {
+        height: 14rem;
+        margin-top: 1.5rem;
+      }
+      input.input-field {
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+    }
+    @media (max-width: 640px) {
+      h1 {
+        font-size: 2.25rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      .btn-group {
+        justify-content: center;
+      }
+      nav {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 1rem;
+      }
+      .result-textarea {
+        height: 12rem;
+      }
+    }
+  </style>
+</head>
+<body class="pb-12">
+  <header class="pt-10 px-4 max-w-5xl mx-auto">
+    <h1 class="neon-text select-none">🔐 Cyber Encryption Tool</h1>
+    <nav class="flex justify-center gap-5 mt-8 flex-wrap" role="navigation" aria-label="Cipher selection">
+      <button aria-pressed="true" id="btn-caesar" class="btn-glow nav-btn-active" type="button">Caesar Cipher</button>
+      <button aria-pressed="false" id="btn-vigenere" class="btn-glow" type="button">Vigenère Cipher</button>
+      <button aria-pressed="false" id="btn-atbash" class="btn-glow" type="button">Atbash Cipher</button>
+      <button aria-pressed="false" id="btn-rot13" class="btn-glow" type="button">ROT13 Cipher</button>
+      <button aria-pressed="false" id="btn-base64" class="btn-glow" type="button">Base64</button>
+    </nav>
+  </header>
+
+  <main class="max-w-4xl mx-auto px-4 mt-10">
+    <!-- Caesar Cipher -->
+    <section id="caesar" class="cipher-section active section-container" tabindex="0" aria-label="Caesar Cipher Section">
+      <h2>Caesar Cipher</h2>
+      <div class="cipher-flex">
+        <div class="input-area">
+          <label for="caesarText">Message:</label>
+          <textarea id="caesarText" class="input-textarea" placeholder="Enter your message here..." aria-describedby="caesarShiftLabel" spellcheck="false"></textarea>
+          <label for="caesarShift" id="caesarShiftLabel" class="mt-4">Shift (number):</label>
+          <input type="number" id="caesarShift" value="3" min="-25" max="25" aria-live="polite" class="input-field" />
+          <div class="btn-group mt-6">
+            <button class="btn-glow w-full sm:w-auto" type="button" id="caesarEncryptBtn"><i class="fas fa-lock mr-2"></i> Encrypt</button>
+            <button class="btn-glow w-full sm:w-auto" type="button" id="caesarDecryptBtn"><i class="fas fa-lock-open mr-2"></i> Decrypt</button>
+          </div>
+        </div>
+        <div class="result-area">
+          <label for="caesarResult">Result:</label>
+          <textarea id="caesarResult" readonly aria-live="polite" spellcheck="false" class="result-textarea"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Vigenère Cipher -->
+    <section id="vigenere" class="cipher-section section-container" tabindex="0" aria-label="Vigenère Cipher Section">
+      <h2>Vigenère Cipher</h2>
+      <div class="cipher-flex">
+        <div class="input-area">
+          <label for="vigenereText">Message:</label>
+          <textarea id="vigenereText" class="input-textarea" placeholder="Enter your message here..." spellcheck="false"></textarea>
+          <label for="vigenereKey" class="mt-4">Keyword:</label>
+          <input type="text" id="vigenereKey" placeholder="Enter keyword" autocomplete="off" spellcheck="false" class="input-field" />
+          <div class="btn-group mt-6">
+            <button class="btn-glow w-full sm:w-auto" type="button" id="vigenereEncryptBtn"><i class="fas fa-lock mr-2"></i> Encrypt</button>
+            <button class="btn-glow w-full sm:w-auto" type="button" id="vigenereDecryptBtn"><i class="fas fa-lock-open mr-2"></i> Decrypt</button>
+          </div>
+        </div>
+        <div class="result-area">
+          <label for="vigenereResult">Result:</label>
+          <textarea id="vigenereResult" readonly aria-live="polite" spellcheck="false" class="result-textarea"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Atbash Cipher -->
+    <section id="atbash" class="cipher-section section-container" tabindex="0" aria-label="Atbash Cipher Section">
+      <h2>Atbash Cipher</h2>
+      <div class="cipher-flex">
+        <div class="input-area">
+          <label for="atbashText">Message:</label>
+          <textarea id="atbashText" class="input-textarea" placeholder="Enter your message here..." spellcheck="false"></textarea>
+          <div class="btn-group mt-6">
+            <button class="btn-glow w-full sm:w-auto" type="button" id="atbashBtn"><i class="fas fa-sync-alt mr-2"></i> Encrypt/Decrypt</button>
+          </div>
+        </div>
+        <div class="result-area">
+          <label for="atbashResult">Result:</label>
+          <textarea id="atbashResult" readonly aria-live="polite" spellcheck="false" class="result-textarea"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROT13 Cipher -->
+    <section id="rot13" class="cipher-section section-container" tabindex="0" aria-label="ROT13 Cipher Section">
+      <h2>ROT13 Cipher</h2>
+      <div class="cipher-flex">
+        <div class="input-area">
+          <label for="rot13Text">Message:</label>
+          <textarea id="rot13Text" class="input-textarea" placeholder="Enter your message here..." spellcheck="false"></textarea>
+          <div class="btn-group mt-6">
+            <button class="btn-glow w-full sm:w-auto" type="button" id="rot13Btn"><i class="fas fa-sync-alt mr-2"></i> Encrypt/Decrypt</button>
+          </div>
+        </div>
+        <div class="result-area">
+          <label for="rot13Result">Result:</label>
+          <textarea id="rot13Result" readonly aria-live="polite" spellcheck="false" class="result-textarea"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- Base64 -->
+    <section id="base64" class="cipher-section section-container" tabindex="0" aria-label="Base64 Encode/Decode Section">
+      <h2>Base64 Encode/Decode</h2>
+      <div class="cipher-flex">
+        <div class="input-area">
+          <label for="base64Text">Message:</label>
+          <textarea id="base64Text" class="input-textarea" placeholder="Enter your message here..." spellcheck="false"></textarea>
+          <div class="btn-group mt-6">
+            <button class="btn-glow w-full sm:w-auto" type="button" id="base64EncodeBtn"><i class="fas fa-arrow-up mr-2"></i> Encode</button>
+            <button class="btn-glow w-full sm:w-auto" type="button" id="base64DecodeBtn"><i class="fas fa-arrow-down mr-2"></i> Decode</button>
+          </div>
+        </div>
+        <div class="result-area">
+          <label for="base64Result">Result:</label>
+          <textarea id="base64Result" readonly aria-live="polite" spellcheck="false" class="result-textarea"></textarea>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="max-w-4xl mx-auto px-4 mt-14 mb-10 text-center text-cyan-500 select-none">
+    <p>© 2024 Cyber Encryption Tool &mdash; Crafted with neon vibes and Tailwind CSS</p>
+  </footer>
+
+  <script>
+    // Elements
+    const sections = {
+      caesar: document.getElementById('caesar'),
+      vigenere: document.getElementById('vigenere'),
+      atbash: document.getElementById('atbash'),
+      rot13: document.getElementById('rot13'),
+      base64: document.getElementById('base64'),
+    };
+    const navButtons = {
+      caesar: document.getElementById('btn-caesar'),
+      vigenere: document.getElementById('btn-vigenere'),
+      atbash: document.getElementById('btn-atbash'),
+      rot13: document.getElementById('btn-rot13'),
+      base64: document.getElementById('btn-base64'),
+    };
+
+    function showSection(id) {
+      Object.entries(sections).forEach(([key, section]) => {
+        if (key === id) {
+          section.classList.add('active');
+          section.setAttribute('tabindex', '0');
+          navButtons[key].classList.add('nav-btn-active');
+          navButtons[key].setAttribute('aria-pressed', 'true');
+          section.focus();
+        } else {
+          section.classList.remove('active');
+          section.setAttribute('tabindex', '-1');
+          navButtons[key].classList.remove('nav-btn-active');
+          navButtons[key].setAttribute('aria-pressed', 'false');
+        }
+      });
+    }
+
+    Object.entries(navButtons).forEach(([key, btn]) => {
+      btn.addEventListener('click', () => showSection(key));
+    });
+
+    // Caesar Cipher
+    function caesarShiftChar(char, shift) {
+      const isUpper = char >= 'A' && char <= 'Z';
+      const isLower = char >= 'a' && char <= 'z';
+      if (isUpper || isLower) {
+        const base = isUpper ? 65 : 97;
+        const code = ((char.charCodeAt(0) - base + shift) % 26 + 26) % 26;
+        return String.fromCharCode(code + base);
+      }
+      return char;
+    }
+    function caesarEncrypt() {
+      const text = document.getElementById('caesarText').value;
+      const shift = parseInt(document.getElementById('caesarShift').value) || 0;
+      let result = '';
+      for (const char of text) {
+        result += caesarShiftChar(char, shift);
+      }
+      document.getElementById('caesarResult').value = result;
+    }
+    function caesarDecrypt() {
+      const text = document.getElementById('caesarText').value;
+      const shift = parseInt(document.getElementById('caesarShift').value) || 0;
+      let result = '';
+      for (const char of text) {
+        result += caesarShiftChar(char, -shift);
+      }
+      document.getElementById('caesarResult').value = result;
+    }
+
+    // Vigenère Cipher
+    function vigenereCipher(text, key, encrypt = true) {
+      let result = '';
+      key = key.toUpperCase().replace(/[^A-Z]/g, '');
+      if (key.length === 0) return null;
+      let keyIndex = 0;
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i];
+        const isUpper = char >= 'A' && char <= 'Z';
+        const isLower = char >= 'a' && char <= 'z';
+        if (isUpper || isLower) {
+          const base = isUpper ? 65 : 97;
+          const charCode = char.charCodeAt(0) - base;
+          const keyChar = key[keyIndex % key.length];
+          const keyShift = keyChar.charCodeAt(0) - 65;
+          const shifted = encrypt
+            ? (charCode + keyShift) % 26
+            : (charCode - keyShift + 26) % 26;
+          result += String.fromCharCode(shifted + base);
+          keyIndex++;
+        } else {
+          result += char;
+        }
+      }
+      return result;
+    }
+    function vigenereEncrypt() {
+      const text = document.getElementById('vigenereText').value;
+      const key = document.getElementById('vigenereKey').value;
+      if (!key.trim()) {
+        alert('Please enter a keyword');
+        return;
+      }
+      const result = vigenereCipher(text, key, true);
+      if (result === null) {
+        alert('Keyword must contain at least one alphabetic character');
+        return;
+      }
+      document.getElementById('vigenereResult').value = result;
+    }
+    function vigenereDecrypt() {
+      const text = document.getElementById('vigenereText').value;
+      const key = document.getElementById('vigenereKey').value;
+      if (!key.trim()) {
+        alert('Please enter a keyword');
+        return;
+      }
+      const result = vigenereCipher(text, key, false);
+      if (result === null) {
+        alert('Keyword must contain at least one alphabetic character');
+        return;
+      }
+      document.getElementById('vigenereResult').value = result;
+    }
+
+    // Atbash Cipher
+    function atbashCipher() {
+      const text = document.getElementById('atbashText').value;
+      let result = '';
+      for (const char of text) {
+        const isUpper = char >= 'A' && char <= 'Z';
+        const isLower = char >= 'a' && char <= 'z';
+        if (isUpper) {
+          result += String.fromCharCode(90 - (char.charCodeAt(0) - 65));
+        } else if (isLower) {
+          result += String.fromCharCode(122 - (char.charCodeAt(0) - 97));
+        } else {
+          result += char;
+        }
+      }
+      document.getElementById('atbashResult').value = result;
+    }
+
+    // ROT13 Cipher
+    function rot13Cipher() {
+      const text = document.getElementById('rot13Text').value;
+      let result = '';
+      for (const char of text) {
+        const isUpper = char >= 'A' && char <= 'Z';
+        const isLower = char >= 'a' && char <= 'z';
+        if (isUpper || isLower) {
+          const base = isUpper ? 65 : 97;
+          result += String.fromCharCode(((char.charCodeAt(0) - base + 13) % 26) + base);
+        } else {
+          result += char;
+        }
+      }
+      document.getElementById('rot13Result').value = result;
+    }
+
+    // Base64 Encode/Decode
+    function base64Encode() {
+      const text = document.getElementById('base64Text').value;
+      try {
+        document.getElementById('base64Result').value = btoa(unescape(encodeURIComponent(text)));
+      } catch {
+        alert('Failed to encode. Please check your input.');
+      }
+    }
+    function base64Decode() {
+      const text = document.getElementById('base64Text').value;
+      try {
+        const decoded = decodeURIComponent(escape(atob(text)));
+        document.getElementById('base64Result').value = decoded;
+      } catch {
+        alert('Invalid Base64 input');
+      }
+    }
+
+    // Event listeners for buttons
+    document.getElementById('caesarEncryptBtn').addEventListener('click', caesarEncrypt);
+    document.getElementById('caesarDecryptBtn').addEventListener('click', caesarDecrypt);
+    document.getElementById('vigenereEncryptBtn').addEventListener('click', vigenereEncrypt);
+    document.getElementById('vigenereDecryptBtn').addEventListener('click', vigenereDecrypt);
+    document.getElementById('atbashBtn').addEventListener('click', atbashCipher);
+    document.getElementById('rot13Btn').addEventListener('click', rot13Cipher);
+    document.getElementById('base64EncodeBtn').addEventListener('click', base64Encode);
+    document.getElementById('base64DecodeBtn').addEventListener('click', base64Decode);
+
+    // Initialize default section
+    showSection('caesar');
+  </script>
+</body>
+</html>
